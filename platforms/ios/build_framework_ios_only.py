@@ -204,15 +204,18 @@ class Builder:
             buildcmd.append("BITCODE_GENERATION_MODE=bitcode")
 
         buildcmd += [
+#            "-UseNewBuildSystem=1",
             "IPHONEOS_DEPLOYMENT_TARGET=" + os.environ['IPHONEOS_DEPLOYMENT_TARGET'],
             "ARCHS=%s" % arch,
+            "BUILD_LIBRARY_FOR_DISTRIBUTION=YES",
+            "DEVELOPMENT_TEAM=CH9K43W9LE",
         ]
 
         buildcmd += [
                 "-sdk", target.lower(),
                 "-configuration", self.getConfiguration(),
                 "-parallelizeTargets",
-                "-jobs", str(multiprocessing.cpu_count()),
+#                "-jobs", str(multiprocessing.cpu_count()),
             ]
 
         return buildcmd
@@ -456,10 +459,6 @@ if __name__ == "__main__":
     b = iOSBuilder(args.opencv, args.contrib, args.dynamic, args.bitcodedisabled, args.without, args.disable, args.enablenonfree,
         [
             (iphoneos_archs, "iPhoneOS"),
-        ] if os.environ.get('BUILD_PRECOMMIT', None) else
-        [
-            (iphoneos_archs, "iPhoneOS"),
-            (iphonesimulator_archs, "iPhoneSimulator"),
         ], args.debug, args.debug_info, args.framework_name, args.run_tests, args.build_docs)
 
     b.build(args.out)
